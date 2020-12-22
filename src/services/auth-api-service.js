@@ -1,14 +1,27 @@
 import config from "../config";
 
 const AuthApiService = {
-  postLogin(credentials) {
-    return fetch(`${config.API_ENDPOINT}/auth/login`, {
+  async postLogin(credentials) {
+    const res = await fetch(`${config.API_ENDPOINT}/auth/login`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(credentials),
-    }).then((res) =>
-      !res.ok ? res.json().then((e) => Promise.rejext(e)) : res.json()
-    );
+    });
+    return await (!res.ok
+      ? res.json().then((e) => Promise.reject(e))
+      : res.json());
+  },
+  async postUser(user) {
+    const res = await fetch(`${config.API_ENDPOINT}/users`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    return await (!res.ok
+      ? res.json().then((e) => Promise.reject(e))
+      : res.json());
   },
 };
 
